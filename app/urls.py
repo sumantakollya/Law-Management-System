@@ -9,6 +9,6 @@ urlpatterns = [
     #path('', views.home, name="home"),
     #path('user/', views.userPage, name="user-page"),
     #path('account/', views.accountSettings, name="account"),
-    path('client/<str:pk_test>/', views.clientPage, name="client"),
-    path('lawyer/<str:pk_test>/', views.lawyerPage, name="lawyer"),
+    path('client/', views.clientPage, name="client"),
+    path('lawyer/', views.lawyerPage, name="lawyer"),
 ]

@@ -79,17 +79,3 @@ def logoutUser(request):
 	logout(request)
 	return redirect('login')
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['client'])
-def clientPage(request):
-	legalservices = request.user.client.legalservice_set.all()
-
-	total_legalservices = legalservices.count()
-	completed = total_legalservices.filter(status='Completed').count()
-	pending = total_legalservices.filter(status='Pending').count()
-
-	print('LEGALSERVICES:', legalservices)
-
-	context = {'legalservices':legalservices, 'total_orders':total_legalservices,
-	'completed':completed,'pending':pending}
-	return render(request, 'app/clientuser.html', context)
