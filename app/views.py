@@ -79,3 +79,31 @@ def logoutUser(request):
 	logout(request)
 	return redirect('login')
 
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['client'])
+def clientPage(request):
+    client = request.user.client
+    legalservices = request.user.client.legalservice_set.all()
+    total_legalservices = legalservices.count()
+    completed = legalservices.filter(status='Completed').count()
+    pending = legalservices.filter(status='Pending').count()
+
+    print('LEGALSERVICES:', legalservices)
+
+    context = {'client':client,'legalservices':legalservices, 'total_orders':total_legalservices,'completed':completed,'pending':pending}
+    return render(request, 'accounts/client.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['lawyer'])
+def lawyerPage(request):
+    lawyer = request.user.lawyer
+    legalservices = request.user.lawyer.legalservice_set.all()
+    total_legalservices = legalservices.count()
+    completed = legalservices.filter(status='Completed').count()
+    pending = legalservices.filter(status='Pending').count()
+
+    print('LEGALSERVICES:', legalservices)
+
+    context = {'lawyer':lawyer,'legalservices':legalservices, 'total_orders':total_legalservices,'completed':completed,'pending':pending}
+    return render(request, 'accounts/lawyer.html', context)
