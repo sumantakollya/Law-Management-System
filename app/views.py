@@ -53,30 +53,28 @@ def loginPage(request):
 	if request.method == 'POST':
 		username = request.POST.get('username')
 		password =request.POST.get('password')
-
 		user = authenticate(request, username=username, password=password)
 
-		if user is not None and user.is_lawyer == True:
-			login(request, user)
-			return redirect('lawyer')
+		if user is not None :
+            login(request, user)
+            lawyer_obj = Lawyer.objects.filter(user=user).first()
+            client_obj = Client.objects.filter(user=user).first()
+            if user.is_authenticated and lawyer_obj != None:
+                return redirect('lawyer')
+            else:
+                return redirect('client')
 
-		elif user is not None and user.is_lawyer == False:
-			login(request, user)
-			return redirect('client')
-        
 		else:
 			messages.info(request, 'Username OR password is incorrect')
 
-	context = {}
-	return render(request, 'app/login.html', context)
+	return render(request, 'app/login.html')
 
 def logoutUser(request):
 	logout(request)
 	return redirect('login')
 
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['client'])
+
 def clientPage(request):
     client = request.user.client
     legalservices = request.user.client.legalservice_set.all()
@@ -89,8 +87,7 @@ def clientPage(request):
     context = {'client':client,'legalservices':legalservices, 'total_orders':total_legalservices,'completed':completed,'pending':pending}
     return render(request, 'app/client.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['lawyer'])
+
 def lawyerPage(request):
     lawyer = request.user.lawyer
     legalservices = request.user.lawyer.legalservice_set.all()
@@ -103,8 +100,7 @@ def lawyerPage(request):
     context = {'lawyer':lawyer,'legalservices':legalservices, 'total_orders':total_legalservices,'completed':completed,'pending':pending}
     return render(request, 'app/lawyer.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['lawyer'])
+
 def updateLawyer(request):
 	lawyer = request.user.lawyer
 	form = LawyerForm(instance=lawyer)
@@ -118,8 +114,7 @@ def updateLawyer(request):
 	context = {'form':form}
 	return render(request, 'app/lawyer_update.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['client'])
+
 def updateClient(request):
 	client = request.user.client
 	form = ClientForm(instance=client)

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 
 class Client(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, null=True)
     phone = models.CharField(max_length=200, null=True)
@@ -19,6 +20,7 @@ class Lawyer(models.Model):
         ('',''),
         ('',''),
     )
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, null=True)
     phone = models.CharField(max_length=200, null=True)
@@ -47,7 +49,7 @@ class LegalService(models.Model):
         ('',''),
         ('',''),
     )
-
+    id = models.AutoField(primary_key=True)
     client = models.ForeignKey(Client, null=True, on_delete= models.SET_NULL)
     lawyer = models.ForeignKey(Lawyer, null=True, on_delete= models.SET_NULL)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
